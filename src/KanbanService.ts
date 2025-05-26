@@ -11,7 +11,7 @@ class KanbanService {
   }
 
   createButtonElement(): HTMLButtonElement {
-    const button: HTMLButtonElement = document.createElement("button");
+    const button: HTMLButtonElement = <HTMLButtonElement>document.createElement("button");
     button.textContent = "X";
     button.classList.add("delete");
     return button;
