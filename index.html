@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header class="board-header">
+      <h1>Kanban Board</h1>
+    </header>
+
+    <main class="kanban-wrapper">
+      <div class="kanban-container">
+        <section class="kanban-column">
+          <h2 class="column-title todo">To Do</h2>
+          <div class="btn">Add Todo</div>
+          <div class="kanban-cards todo-kanban-cards">
+
+          </div>
+        </section>
+
+        <section class="kanban-column">
+          <h2 class="column-title in-progress">In Progress</h2>
+          <div class="kanban-cards">
+          </div>
+        </section>
+
+        <section class="kanban-column">
+          <h2 class="column-title done">Done</h2>
+          <div class="kanban-cards">
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="./dist/KanbanService.js"></script>
+    <script src="./dist/KanbanController.js"></script>
+    <script src="./dist/main.js"></script>
+  </body>
+</html>

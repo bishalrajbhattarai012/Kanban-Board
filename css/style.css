@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f5f7;
+    color: #333;
+  }
+  
+  /* Header */
+  .board-header {
+    padding: 20px;
+    text-align: center;
+    background-color: #112d57;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Wrapper to center content */
+  .kanban-wrapper {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 20px 0;
+  }
+  
+  /* Flex container for columns */
+  .kanban-container {
+    display: flex;
+    gap: 20px;
+    padding: 0 20px;
+    flex-wrap: nowrap;
+  }
+  
+  /* Individual column */
+  .kanban-column {
+    width:550px;
+    background-color: #ebecf0;
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+  }
+  
+  /* Column title */
+  .column-title {
+    text-align: center;
+    padding: 10px;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #dcdfe4;
+  }
+  
+  /* Card container */
+  .kanban-cards {
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+    overflow-y: auto;
+    height:68vh;
+  }
+  
+  .btn{
+    padding: 30px;
+    background-color: #112d57;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(252, 250, 250, 0.15);
+    transition: box-shadow 0.2s ease;
+    color:#fff;
+    text-align: center;
+    cursor:pointer;
+    margin-bottom: 10px
+}
+
+  /* Card style */
+  .kanban-card {
+    padding: 30px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(9, 30, 66, 0.15);
+    transition: box-shadow 0.2s ease;
+    /* display:flex; */
+    gap:0.3rem;
+  align-items: center;
+  margin:5px 0;
+  }
+
+
+  .delete{
+    padding: 1rem 1.4rem;
+    border-radius: 0.5rem;
+    background-color:rgb(221, 68, 68);
+    color:#fff;
+    border-color:#fff;
+    font-weight: 900;
+
+  }
+
+
+  
+  .kanban-card:hover {
+    box-shadow: 0 4px 12px rgba(9, 30, 66, 0.25);
+    cursor: pointer;
+  }
+  
+
+  .dragging{
+    opacity: 0.5;
+  }
+
