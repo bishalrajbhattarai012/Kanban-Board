@@ -3,6 +3,7 @@ class KanbanController {
   private kanbanService: KanbanService;
   private todosCard: HTMLDivElement;
   private droppables: HTMLDivElement[];
+
   constructor() {
     this.kanbanService = new KanbanService();
     this.addButton = this.kanbanService.getAddButton();
@@ -10,81 +11,47 @@ class KanbanController {
     this.droppables = this.kanbanService.getAllDroppableAreas();
   }
 
+  private handleDragStart<T extends HTMLElement>(card: T): void {
+    this.kanbanService.toggleClass<T>(card, "dragging");
+    this.kanbanService.toggleElementEditableState<T>(card, "false");
+  }
 
-  
+  private handleDragEnd<T extends HTMLElement>(card: T): void {
+    this.kanbanService.toggleClass<T>(card, "dragging");
+    this.kanbanService.toggleElementEditableState<T>(card, "true");
+  }
 
+  private attachCardEvents(card: HTMLDivElement): void {
+    card.addEventListener("dragstart", () => this.handleDragStart(card));
+    card.addEventListener("dragend", () => this.handleDragEnd(card));
+    card.addEventListener("dblclick", () => this.kanbanService.removeCard(card));
+  }
 
   attachDragOverEvent(): void {
-    this.droppables.forEach((droppable: HTMLDivElement) => {
+    this.droppables.forEach((droppable) => {
       droppable.addEventListener("dragover", (e: DragEvent) => {
-        const currentlyDraggingElement: HTMLDivElement = <HTMLDivElement>(
-          this.kanbanService.getCurrentDraggingCard()
-        );
-        const allCardsExceptDragging: HTMLDivElement[] = <HTMLDivElement[]>(
-          this.kanbanService.getAllCardsExpectCurrentDragging(droppable)
-        );
-
-        const afterElement: HTMLDivElement | null = <HTMLDivElement | null>(
-          allCardsExceptDragging.find((child: HTMLDivElement) => {
-            const box: DOMRect = <DOMRect>child.getBoundingClientRect();
-            return this.kanbanService.checkAfterElement(e, box);
-          })
-        );
+        const draggingCard = this.kanbanService.getCurrentDraggingCard();
+        const siblings = this.kanbanService.getAllCardsExpectCurrentDragging(droppable);
+        
+        const afterElement = siblings.find((child) => {
+          const box = child.getBoundingClientRect();
+          return this.kanbanService.checkAfterElement(e, box);
+        });
 
         this.kanbanService.checkCardPlacement(
           droppable,
-          afterElement,
-          currentlyDraggingElement
+          afterElement || null,
+          draggingCard
         );
       });
     });
   }
 
-
-
-  attachDragStartEvent<T extends HTMLElement>(newCard:T){
-    newCard.addEventListener("dragstart", (e: DragEvent) => {
-      this.kanbanService.toggleClass<T>(newCard,"dragging")
-      this.kanbanService.toggleElementEditableState<T>(newCard, "false");
+  attachAddEvent(): void {
+    this.addButton.addEventListener("click", () => {
+      const newCard = this.kanbanService.addKanbanCard(this.todosCard);
+      this.attachCardEvents(newCard);
     });
-  }
-
-  attachDragEndEvent<T extends HTMLElement>(newCard:T){
-    newCard.addEventListener("dragend", (e: DragEvent) => {
-      this.kanbanService.toggleClass<T>(newCard,"dragging")
-      this.kanbanService.toggleElementEditableState<T>(newCard, "true");
-    });
-  }
-
-
-
-
-
-
-  attachAddEvent():void {
-    this.addButton.addEventListener("click", (e: MouseEvent) => {
-      const newCard: HTMLDivElement = this.kanbanService.addKanbanCard(
-        this.todosCard
-      );
-
-      newCard.addEventListener("dragstart", (e: DragEvent) => {
-        this.kanbanService.toggleClass<HTMLDivElement>(newCard,"dragging")
-        this.kanbanService.toggleElementEditableState<HTMLDivElement>(newCard, "false");
-      });
-      newCard.addEventListener("dragend", (e: DragEvent) => {
-        this.kanbanService.toggleClass<HTMLDivElement>(newCard,"dragging")
-        this.kanbanService.toggleElementEditableState<HTMLDivElement>(newCard, "true");
-      });
-
-      newCard.addEventListener("dblclick", (e: MouseEvent) => {
-        this.kanbanService.removeCard<HTMLDivElement>(newCard);
-      });
-    });
-
-
-
-
-
   }
 
   init(): void {

@@ -6,45 +6,36 @@ class KanbanController {
         this.todosCard = this.kanbanService.getTodosCard();
         this.droppables = this.kanbanService.getAllDroppableAreas();
     }
+    handleDragStart(card) {
+        this.kanbanService.toggleClass(card, "dragging");
+        this.kanbanService.toggleElementEditableState(card, "false");
+    }
+    handleDragEnd(card) {
+        this.kanbanService.toggleClass(card, "dragging");
+        this.kanbanService.toggleElementEditableState(card, "true");
+    }
+    attachCardEvents(card) {
+        card.addEventListener("dragstart", () => this.handleDragStart(card));
+        card.addEventListener("dragend", () => this.handleDragEnd(card));
+        card.addEventListener("dblclick", () => this.kanbanService.removeCard(card));
+    }
     attachDragOverEvent() {
         this.droppables.forEach((droppable) => {
             droppable.addEventListener("dragover", (e) => {
-                const currentlyDraggingElement = (this.kanbanService.getCurrentDraggingCard());
-                const allCardsExceptDragging = (this.kanbanService.getAllCardsExpectCurrentDragging(droppable));
-                const afterElement = (allCardsExceptDragging.find((child) => {
+                const draggingCard = this.kanbanService.getCurrentDraggingCard();
+                const siblings = this.kanbanService.getAllCardsExpectCurrentDragging(droppable);
+                const afterElement = siblings.find((child) => {
                     const box = child.getBoundingClientRect();
                     return this.kanbanService.checkAfterElement(e, box);
-                }));
-                this.kanbanService.checkCardPlacement(droppable, afterElement, currentlyDraggingElement);
+                });
+                this.kanbanService.checkCardPlacement(droppable, afterElement || null, draggingCard);
             });
-        });
-    }
-    attachDragStartEvent(newCard) {
-        newCard.addEventListener("dragstart", (e) => {
-            this.kanbanService.toggleClass(newCard, "dragging");
-            this.kanbanService.toggleElementEditableState(newCard, "false");
-        });
-    }
-    attachDragEndEvent(newCard) {
-        newCard.addEventListener("dragend", (e) => {
-            this.kanbanService.toggleClass(newCard, "dragging");
-            this.kanbanService.toggleElementEditableState(newCard, "true");
         });
     }
     attachAddEvent() {
-        this.addButton.addEventListener("click", (e) => {
+        this.addButton.addEventListener("click", () => {
             const newCard = this.kanbanService.addKanbanCard(this.todosCard);
-            newCard.addEventListener("dragstart", (e) => {
-                this.kanbanService.toggleClass(newCard, "dragging");
-                this.kanbanService.toggleElementEditableState(newCard, "false");
-            });
-            newCard.addEventListener("dragend", (e) => {
-                this.kanbanService.toggleClass(newCard, "dragging");
-                this.kanbanService.toggleElementEditableState(newCard, "true");
-            });
-            newCard.addEventListener("dblclick", (e) => {
-                this.kanbanService.removeCard(newCard);
-            });
+            this.attachCardEvents(newCard);
         });
     }
     init() {
