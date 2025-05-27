@@ -6,18 +6,19 @@ class KanbanController {
         this.todosCard = this.kanbanService.getTodosCard();
         this.droppables = this.kanbanService.getAllDroppableAreas();
     }
-    handleDragStart(card) {
-        this.kanbanService.toggleClass(card, "dragging");
-        this.kanbanService.toggleElementEditableState(card, "false");
+    handleDragToggle(card, eventName, editable) {
+        card.addEventListener(eventName, () => {
+            this.kanbanService.toggleClass(card, "dragging");
+            this.kanbanService.toggleElementEditableState(card, editable);
+        });
     }
-    handleDragEnd(card) {
-        this.kanbanService.toggleClass(card, "dragging");
-        this.kanbanService.toggleElementEditableState(card, "true");
+    handleDeleteEvent(card, eventName) {
+        card.addEventListener(eventName, () => this.kanbanService.removeCard(card));
     }
     attachCardEvents(card) {
-        card.addEventListener("dragstart", () => this.handleDragStart(card));
-        card.addEventListener("dragend", () => this.handleDragEnd(card));
-        card.addEventListener("dblclick", () => this.kanbanService.removeCard(card));
+        this.handleDragToggle(card, "dragstart", "false");
+        this.handleDragToggle(card, "dragend", "true");
+        this.handleDeleteEvent(card, "dblclick");
     }
     attachDragOverEvent() {
         this.droppables.forEach((droppable) => {
@@ -34,8 +35,7 @@ class KanbanController {
     }
     attachAddEvent() {
         this.addButton.addEventListener("click", () => {
-            const newCard = this.kanbanService.addKanbanCard(this.todosCard);
-            this.attachCardEvents(newCard);
+            this.attachCardEvents(this.kanbanService.addKanbanCard(this.todosCard));
         });
     }
     init() {
