@@ -1,4 +1,5 @@
-class KanbanService {
+import { KanbanUtilityService } from "./KanbanUtilityService.js";
+export class KanbanService {
   private kanbanUtilityService: KanbanUtilityService;
 
   constructor() {
@@ -47,6 +48,36 @@ class KanbanService {
     card.contentEditable = state;
   }
 
+
+  getAfterElement(siblings: HTMLDivElement[], e: DragEvent) {
+    const afterElement = siblings.find((child: HTMLDivElement) => {
+      const box = child.getBoundingClientRect();
+      return this.checkAfterElement(e, box);
+    });
+
+    return afterElement;
+  }
+
+
+  handleCardPlacement(droppables:HTMLDivElement[]){
+    droppables.forEach((droppable) => {
+      droppable.addEventListener("dragover", (e: DragEvent) => {
+        const draggingCard = this.getCurrentDraggingCard();
+        const siblings =
+          this.getAllCardsExpectCurrentDragging(droppable);
+        const afterElement = this.getAfterElement(siblings,e)
+        this.checkCardPlacement(droppable, afterElement,draggingCard
+        );
+      });
+    });
+
+
+
+  }
+
+
+
+
   checkAfterElement(e: DragEvent, box: DOMRect): boolean {
     return e.clientY < box.top + box.height;
   }
@@ -87,7 +118,7 @@ class KanbanService {
 
   checkCardPlacement(
     droppable: HTMLDivElement,
-    afterElement: HTMLDivElement | null,
+    afterElement: HTMLDivElement | undefined,
     currentlyDraggingElement: HTMLDivElement
   ): void {
     if (!currentlyDraggingElement) return;

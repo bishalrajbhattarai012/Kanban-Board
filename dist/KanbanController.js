@@ -1,10 +1,12 @@
-"use strict";
-class KanbanController {
+import { KanbanService } from "./KanbanService.js";
+export class KanbanController {
     constructor() {
         this.kanbanService = new KanbanService();
         this.addButton = this.kanbanService.getAddButton();
         this.todosCard = this.kanbanService.getTodosCard();
         this.droppables = this.kanbanService.getAllDroppableAreas();
+        this.attachAddEvent();
+        this.attachDragOverEvent();
     }
     handleDragToggle(card, eventName, editable) {
         card.addEventListener(eventName, () => {
@@ -21,25 +23,11 @@ class KanbanController {
         this.handleDeleteEvent(card, "dblclick");
     }
     attachDragOverEvent() {
-        this.droppables.forEach((droppable) => {
-            droppable.addEventListener("dragover", (e) => {
-                const draggingCard = this.kanbanService.getCurrentDraggingCard();
-                const siblings = this.kanbanService.getAllCardsExpectCurrentDragging(droppable);
-                const afterElement = siblings.find((child) => {
-                    const box = child.getBoundingClientRect();
-                    return this.kanbanService.checkAfterElement(e, box);
-                });
-                this.kanbanService.checkCardPlacement(droppable, afterElement || null, draggingCard);
-            });
-        });
+        this.kanbanService.handleCardPlacement(this.droppables);
     }
     attachAddEvent() {
         this.addButton.addEventListener("click", () => {
             this.attachCardEvents(this.kanbanService.addKanbanCard(this.todosCard));
         });
-    }
-    init() {
-        this.attachAddEvent();
-        this.attachDragOverEvent();
     }
 }

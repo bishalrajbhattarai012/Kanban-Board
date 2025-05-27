@@ -1,1 +1,3 @@
- new KanbanController().init();
+import {KanbanController} from "./KanbanController.js";
+
+ new KanbanController()

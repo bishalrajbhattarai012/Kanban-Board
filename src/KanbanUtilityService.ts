@@ -1,8 +1,5 @@
-class KanbanUtilityService {
-  addClassToElement<T extends HTMLElement, K extends string>(
-    element: T,
-    className: K
-  ): void {
+export class KanbanUtilityService {
+  addClassToElement<T extends HTMLElement, K extends string>(element: T,className: K): void {
     element.classList.add(className);
   }
 
@@ -10,14 +7,9 @@ class KanbanUtilityService {
     newCard.classList.toggle(className);
   }
 
-  toggleElementEditableState<T extends HTMLElement>(
-    card: T,
-    state: string
-  ): void {
+  toggleElementEditableState<T extends HTMLElement>(card: T,state: string): void {
     card.contentEditable = state;
   }
-
-  
 
 
 }

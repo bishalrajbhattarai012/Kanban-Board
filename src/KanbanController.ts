@@ -1,4 +1,10 @@
-class KanbanController {
+import { KanbanService } from "./KanbanService.js";
+
+type DragEventName= "dragstart" | "dragend"
+type ContentEditable = "true" | "false"
+type DeleteEvent = "dblclick"
+
+export class KanbanController {
   private addButton: HTMLDivElement;
   private kanbanService: KanbanService;
   private todosCard: HTMLDivElement;
@@ -9,23 +15,18 @@ class KanbanController {
     this.addButton = this.kanbanService.getAddButton();
     this.todosCard = this.kanbanService.getTodosCard();
     this.droppables = this.kanbanService.getAllDroppableAreas();
+    this.attachAddEvent();
+    this.attachDragOverEvent();
   }
 
-  private handleDragToggle<T extends HTMLElement>(
-    card: T,
-    eventName: "dragstart" | "dragend",
-    editable: "true" | "false"
-  ) {
+  private handleDragToggle<T extends HTMLElement>(card: T,eventName: DragEventName,editable: ContentEditable) {
     card.addEventListener(eventName, () => {
       this.kanbanService.toggleClass<T>(card, "dragging");
       this.kanbanService.toggleElementEditableState<T>(card, editable);
     });
   }
 
-  private handleDeleteEvent<T extends HTMLElement>(
-    card: T,
-    eventName: "dblclick"
-  ) {
+  private handleDeleteEvent<T extends HTMLElement>(card: T,eventName: DeleteEvent) {
     card.addEventListener(eventName, () => this.kanbanService.removeCard(card));
   }
 
@@ -34,21 +35,10 @@ class KanbanController {
     this.handleDragToggle(card, "dragend", "true");
     this.handleDeleteEvent(card, "dblclick");
   }
-  
+
 
   attachDragOverEvent(): void {
-    this.droppables.forEach((droppable) => {
-      droppable.addEventListener("dragover", (e: DragEvent) => {
-        const draggingCard = this.kanbanService.getCurrentDraggingCard();
-        const siblings = this.kanbanService.getAllCardsExpectCurrentDragging(droppable);
-        const afterElement = siblings.find((child) => {
-          const box = child.getBoundingClientRect();
-          return this.kanbanService.checkAfterElement(e, box);
-        });
-
-        this.kanbanService.checkCardPlacement(droppable,afterElement || null,draggingCard);
-      });
-    });
+    this.kanbanService.handleCardPlacement(this.droppables)
   }
 
   attachAddEvent(): void {
@@ -59,8 +49,4 @@ class KanbanController {
     });
   }
 
-  init(): void {
-    this.attachAddEvent();
-    this.attachDragOverEvent();
-  }
 }

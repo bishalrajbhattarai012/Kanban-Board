@@ -1,5 +1,5 @@
-"use strict";
-class KanbanService {
+import { KanbanUtilityService } from "./KanbanUtilityService.js";
+export class KanbanService {
     constructor() {
         this.kanbanUtilityService = new KanbanUtilityService();
     }
@@ -26,6 +26,23 @@ class KanbanService {
     }
     toggleElementEditableState(card, state) {
         card.contentEditable = state;
+    }
+    getAfterElement(siblings, e) {
+        const afterElement = siblings.find((child) => {
+            const box = child.getBoundingClientRect();
+            return this.checkAfterElement(e, box);
+        });
+        return afterElement;
+    }
+    handleCardPlacement(droppables) {
+        droppables.forEach((droppable) => {
+            droppable.addEventListener("dragover", (e) => {
+                const draggingCard = this.getCurrentDraggingCard();
+                const siblings = this.getAllCardsExpectCurrentDragging(droppable);
+                const afterElement = this.getAfterElement(siblings, e);
+                this.checkCardPlacement(droppable, afterElement, draggingCard);
+            });
+        });
     }
     checkAfterElement(e, box) {
         return e.clientY < box.top + box.height;
