@@ -85,7 +85,7 @@
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(9, 30, 66, 0.15);
     transition: box-shadow 0.2s ease;
-    /* display:flex; */
+    border-left:10px solid #112d57;
     gap:0.3rem;
   align-items: center;
   margin:5px 0;
@@ -99,7 +99,6 @@
     color:#fff;
     border-color:#fff;
     font-weight: 900;
-
   }
 
 

@@ -1,16 +1,16 @@
 "use strict";
 class KanbanService {
+    constructor() {
+        this.kanbanUtilityService = new KanbanUtilityService();
+    }
     getAddButton() {
         const addButton = (document.querySelector(".btn"));
         return addButton;
     }
-    createDivElememt() {
-        return document.createElement("div");
-    }
     createButtonElement() {
-        const button = document.createElement("button");
+        const button = (document.createElement("button"));
         button.textContent = "X";
-        button.classList.add("delete");
+        this.kanbanUtilityService.addClassToElement(button, "delete");
         return button;
     }
     toggleClass(newCard, className) {
@@ -18,9 +18,9 @@ class KanbanService {
     }
     addKanbanCard(parent) {
         const newCard = (document.createElement("div"));
-        newCard.classList.add("kanban-card");
+        this.kanbanUtilityService.addClassToElement(newCard, "kanban-card");
         newCard.draggable = true;
-        newCard.contentEditable = "true";
+        this.toggleElementEditableState(newCard, "true");
         parent.appendChild(newCard);
         return newCard;
     }

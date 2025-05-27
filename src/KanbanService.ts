@@ -1,4 +1,10 @@
 class KanbanService {
+  private kanbanUtilityService: KanbanUtilityService;
+
+  constructor() {
+    this.kanbanUtilityService = new KanbanUtilityService();
+  }
+
   getAddButton(): HTMLDivElement {
     const addButton: HTMLDivElement = <HTMLDivElement>(
       document.querySelector(".btn")
@@ -6,18 +12,20 @@ class KanbanService {
     return addButton;
   }
 
-  createDivElememt(): HTMLDivElement {
-    return document.createElement("div");
-  }
 
   createButtonElement(): HTMLButtonElement {
-    const button: HTMLButtonElement = <HTMLButtonElement>document.createElement("button");
+    const button: HTMLButtonElement = <HTMLButtonElement>(
+      document.createElement("button")
+    );
     button.textContent = "X";
-    button.classList.add("delete");
+    this.kanbanUtilityService.addClassToElement<HTMLButtonElement, string>(
+      button,
+      "delete"
+    );
     return button;
   }
 
-  toggleClass(newCard: HTMLDivElement, className: string) {
+  toggleClass<T extends HTMLElement>(newCard: T, className: string): void {
     newCard.classList.toggle(className);
   }
 
@@ -25,14 +33,17 @@ class KanbanService {
     const newCard: HTMLDivElement = <HTMLDivElement>(
       document.createElement("div")
     );
-    newCard.classList.add("kanban-card");
+    this.kanbanUtilityService.addClassToElement(newCard,"kanban-card")
     newCard.draggable = true;
-    newCard.contentEditable = "true";
+    this.toggleElementEditableState(newCard,"true")
     parent.appendChild(newCard);
     return newCard;
   }
 
-  toggleElementEditableState(card: HTMLDivElement, state: string): void {
+  toggleElementEditableState<T extends HTMLElement>(
+    card: T,
+    state: string
+  ): void {
     card.contentEditable = state;
   }
 
@@ -70,7 +81,7 @@ class KanbanService {
     return droppables;
   }
 
-  removeCard(newCard: HTMLDivElement) {
+  removeCard<T extends HTMLElement>(newCard: T) {
     newCard.remove();
   }
 

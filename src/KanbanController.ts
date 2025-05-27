@@ -10,6 +10,10 @@ class KanbanController {
     this.droppables = this.kanbanService.getAllDroppableAreas();
   }
 
+
+  
+
+
   attachDragOverEvent(): void {
     this.droppables.forEach((droppable: HTMLDivElement) => {
       droppable.addEventListener("dragover", (e: DragEvent) => {
@@ -36,32 +40,51 @@ class KanbanController {
     });
   }
 
-  removeCard(newCard: HTMLDivElement) {
-    newCard.remove();
+
+
+  attachDragStartEvent<T extends HTMLElement>(newCard:T){
+    newCard.addEventListener("dragstart", (e: DragEvent) => {
+      this.kanbanService.toggleClass<T>(newCard,"dragging")
+      this.kanbanService.toggleElementEditableState<T>(newCard, "false");
+    });
   }
 
-  toggleClass(newCard:HTMLDivElement,className:string){
-        newCard.classList.toggle(className)
+  attachDragEndEvent<T extends HTMLElement>(newCard:T){
+    newCard.addEventListener("dragend", (e: DragEvent) => {
+      this.kanbanService.toggleClass<T>(newCard,"dragging")
+      this.kanbanService.toggleElementEditableState<T>(newCard, "true");
+    });
   }
 
-  attachAddEvent(): void {
+
+
+
+
+
+  attachAddEvent():void {
     this.addButton.addEventListener("click", (e: MouseEvent) => {
       const newCard: HTMLDivElement = this.kanbanService.addKanbanCard(
         this.todosCard
       );
+
       newCard.addEventListener("dragstart", (e: DragEvent) => {
-        newCard.classList.toggle("dragging");
-        this.kanbanService.toggleElementEditableState(newCard, "false");
+        this.kanbanService.toggleClass<HTMLDivElement>(newCard,"dragging")
+        this.kanbanService.toggleElementEditableState<HTMLDivElement>(newCard, "false");
       });
       newCard.addEventListener("dragend", (e: DragEvent) => {
-        newCard.classList.toggle("dragging");
-        this.kanbanService.toggleElementEditableState(newCard, "true");
+        this.kanbanService.toggleClass<HTMLDivElement>(newCard,"dragging")
+        this.kanbanService.toggleElementEditableState<HTMLDivElement>(newCard, "true");
       });
 
       newCard.addEventListener("dblclick", (e: MouseEvent) => {
-        this.kanbanService.removeCard(newCard);
+        this.kanbanService.removeCard<HTMLDivElement>(newCard);
       });
     });
+
+
+
+
+
   }
 
   init(): void {
@@ -69,4 +92,3 @@ class KanbanController {
     this.attachDragOverEvent();
   }
 }
-

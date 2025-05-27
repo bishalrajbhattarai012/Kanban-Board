@@ -19,21 +19,27 @@ class KanbanController {
             });
         });
     }
-    removeCard(newCard) {
-        newCard.remove();
+    attachDragStartEvent(newCard) {
+        newCard.addEventListener("dragstart", (e) => {
+            this.kanbanService.toggleClass(newCard, "dragging");
+            this.kanbanService.toggleElementEditableState(newCard, "false");
+        });
     }
-    toggleClass(newCard, className) {
-        newCard.classList.toggle(className);
+    attachDragEndEvent(newCard) {
+        newCard.addEventListener("dragend", (e) => {
+            this.kanbanService.toggleClass(newCard, "dragging");
+            this.kanbanService.toggleElementEditableState(newCard, "true");
+        });
     }
     attachAddEvent() {
         this.addButton.addEventListener("click", (e) => {
             const newCard = this.kanbanService.addKanbanCard(this.todosCard);
             newCard.addEventListener("dragstart", (e) => {
-                newCard.classList.toggle("dragging");
+                this.kanbanService.toggleClass(newCard, "dragging");
                 this.kanbanService.toggleElementEditableState(newCard, "false");
             });
             newCard.addEventListener("dragend", (e) => {
-                newCard.classList.toggle("dragging");
+                this.kanbanService.toggleClass(newCard, "dragging");
                 this.kanbanService.toggleElementEditableState(newCard, "true");
             });
             newCard.addEventListener("dblclick", (e) => {
