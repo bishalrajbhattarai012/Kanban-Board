@@ -42,10 +42,8 @@ export class KanbanController {
   }
 
   attachAddEvent(): void {
-    this.addButton.addEventListener("click", () => {
-      this.attachCardEvents(
-        <HTMLDivElement>this.kanbanService.addKanbanCard(this.todosCard)
-      );
+    this.addButton.addEventListener("click", ():void=> {
+      this.attachCardEvents(<HTMLDivElement>this.kanbanService.addKanbanCard(this.todosCard));
     });
   }
 

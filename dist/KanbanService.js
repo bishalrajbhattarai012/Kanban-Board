@@ -1,24 +1,18 @@
-import { KanbanUtilityService } from "./KanbanUtilityService.js";
 export class KanbanService {
-    constructor() {
-        this.kanbanUtilityService = new KanbanUtilityService();
-    }
+    constructor() { }
     getAddButton() {
         const addButton = (document.querySelector(".btn"));
         return addButton;
     }
-    createButtonElement() {
-        const button = (document.createElement("button"));
-        button.textContent = "X";
-        this.kanbanUtilityService.addClassToElement(button, "delete");
-        return button;
-    }
     toggleClass(newCard, className) {
         newCard.classList.toggle(className);
     }
+    addClassToElement(element, className) {
+        element.classList.add(className);
+    }
     addKanbanCard(parent) {
         const newCard = (document.createElement("div"));
-        this.kanbanUtilityService.addClassToElement(newCard, "kanban-card");
+        this.addClassToElement(newCard, "kanban-card");
         newCard.draggable = true;
         this.toggleElementEditableState(newCard, "true");
         parent.appendChild(newCard);

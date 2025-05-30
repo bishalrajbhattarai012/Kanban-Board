@@ -1,10 +1,6 @@
-import { KanbanUtilityService } from "./KanbanUtilityService.js";
 export class KanbanService {
-  private kanbanUtilityService: KanbanUtilityService;
 
-  constructor() {
-    this.kanbanUtilityService = new KanbanUtilityService();
-  }
+  constructor() {}
 
   getAddButton(): HTMLDivElement {
     const addButton: HTMLDivElement = <HTMLDivElement>(
@@ -13,28 +9,20 @@ export class KanbanService {
     return addButton;
   }
 
-
-  createButtonElement(): HTMLButtonElement {
-    const button: HTMLButtonElement = <HTMLButtonElement>(
-      document.createElement("button")
-    );
-    button.textContent = "X";
-    this.kanbanUtilityService.addClassToElement<HTMLButtonElement, string>(
-      button,
-      "delete"
-    );
-    return button;
-  }
-
   toggleClass<T extends HTMLElement>(newCard: T, className: string): void {
     newCard.classList.toggle(className);
   }
+
+  addClassToElement<T extends HTMLElement, K extends string>(element: T,className: K): void {
+    element.classList.add(className);
+  }
+
 
   addKanbanCard(parent: HTMLDivElement): HTMLDivElement {
     const newCard: HTMLDivElement = <HTMLDivElement>(
       document.createElement("div")
     );
-    this.kanbanUtilityService.addClassToElement(newCard,"kanban-card")
+    this.addClassToElement(newCard,"kanban-card")
     newCard.draggable = true;
     this.toggleElementEditableState(newCard,"true")
     parent.appendChild(newCard);
@@ -54,7 +42,6 @@ export class KanbanService {
       const box = child.getBoundingClientRect();
       return this.checkAfterElement(e, box);
     });
-
     return afterElement;
   }
 
@@ -70,13 +57,7 @@ export class KanbanService {
         );
       });
     });
-
-
-
   }
-
-
-
 
   checkAfterElement(e: DragEvent, box: DOMRect): boolean {
     return e.clientY < box.top + box.height;
